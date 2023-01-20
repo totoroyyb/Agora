@@ -2,10 +2,14 @@
 #
 # Set up a fresh Ubuntu 20.04 box with packages for building Agora.
 # This does not include installing Intel compilers and FlexRAN
+
+# Repository source for installing gcc-9 and g++-9
+sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+
 sudo apt update
 
 # Toolchain
-sudo apt -y install g++ cmake make
+sudo apt -y install g++-9 gcc-9 cmake make build-essential
 
 # General libs
 sudo apt -y install liblapack-dev libblas-dev libboost-all-dev doxygen \
@@ -13,8 +17,8 @@ sudo apt -y install liblapack-dev libblas-dev libboost-all-dev doxygen \
 
 # These libraries may not exist on newer kernel versions
 # If they fail to be installed, try python3 version instead
-sudo apt -y python-numpy python-pyqt5 libpython-dev
-# sudo apt -y python3-numpy python3-pyqt5 libpython3-dev
+# sudo apt install -y python-numpy python-pyqt5 libpython-dev
+sudo apt install -y python3-numpy python3-pyqt5 libpython3-dev
 
 # GTest needs special compilation
 (cd /usr/src/gtest && sudo cmake . && sudo make && sudo mv libg* /usr/lib/)
