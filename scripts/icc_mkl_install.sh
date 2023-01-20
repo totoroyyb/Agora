@@ -25,3 +25,6 @@ sudo wget -O ./$HPC_KIT_SCRIPT_NAME $HPC_KIT_FULL_URL &&
 echo "Install ICC..."
 sudo sh ./$HPC_KIT_SCRIPT_NAME  -r yes -a -s --eula accept --action install --components intel.oneapi.lin.dpcpp-cpp-compiler-pro:intel.oneapi.lin.ifort-compiler &&
 echo "[SUCCESS] Installed ICC."
+
+SOURCE_VARS="source $INSTALL_PATH/oneapi/setvars.sh"
+echo $SOURCE_VARS >> ~/.zshrc
