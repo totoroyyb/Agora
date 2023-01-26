@@ -5,10 +5,6 @@ cmake_policy(SET CMP0054 NEW)
 cmake_policy(SET CMP0048 NEW)
 project(Agora VERSION 1.2.0)
 
-# MIND version with NFS dynamic linking
-set(CMAKE_PREFIX_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/")
-set(CMAKE_FIND_ROOT_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/")
-
 if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
   #Flags is enabled by default for c++17
   set(GCC_COVERAGE_COMPILE_FLAGS "-faligned-new")
@@ -75,8 +71,7 @@ message(STATUS "CURRENT DIRECTORY: ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
 add_definitions(-DPROJECT_DIRECTORY=${SOURCE_DIR})
 
-# Use NFS
-set(FLEXRAN_FEC_SDK_DIR /shared_libraries_nfs/lib/FlexRAN-FEC-SDK-19-04/sdk)
+set(FLEXRAN_FEC_SDK_DIR /opt/FlexRAN-FEC-SDK-19-04/sdk)
 
 # Determine if the current machine supports AVX-512
 CHECK_C_SOURCE_RUNS("int main() { asm volatile(\"vmovdqu64 %zmm0, %zmm1\"); return 0; }" ISA_AVX512)
