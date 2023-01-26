@@ -7,7 +7,7 @@ project(Agora VERSION 1.2.0)
 
 # MIND version with NFS dynamic linking
 set(CMAKE_PREFIX_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/")
-set(CMAKE_FIND_ROOT_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/")
+# set(CMAKE_FIND_ROOT_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/")
 
 if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
   #Flags is enabled by default for c++17
