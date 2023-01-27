@@ -7,7 +7,6 @@ project(Agora VERSION 1.2.0)
 
 # MIND version with NFS dynamic linking
 set(CMAKE_PREFIX_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/")
-# set(CMAKE_FIND_ROOT_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/")
 
 if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
   #Flags is enabled by default for c++17
@@ -428,7 +427,10 @@ set(CLIENT_SOURCES
   src/mac/mac_thread_client.cc)
 add_library(client_sources_lib OBJECT ${CLIENT_SOURCES})
 
-set(COMMON_LIBS -Wl,--start-group ${MKL_LIBS} ${BLAS_LIBRARIES} -Wl,--end-group ${NUMA_LIBRARIES} ${FLEXRAN_LDPC_LIBS} ${HDF5_LIBRARIES} ${DPDK_LIBRARIES} ${ARMADILLO_LIBRARIES} ${SOAPY_LIB}
+include_directories($ENV{MKLROOT}/include)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I$ENV{MKLROOT}/include")
+# set(COMMON_LIBS -Wl,--start-group ${MKL_LIBS} ${BLAS_LIBRARIES} -static-intel -Wl,--end-group ${NUMA_LIBRARIES} ${FLEXRAN_LDPC_LIBS} ${HDF5_LIBRARIES} ${DPDK_LIBRARIES} ${ARMADILLO_LIBRARIES} ${SOAPY_LIB}
+set(COMMON_LIBS -Wl,--start-group $ENV{MKLROOT}/lib/intel64/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/intel64/libmkl_sequential.a $ENV{MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl ${NUMA_LIBRARIES} ${FLEXRAN_LDPC_LIBS} ${HDF5_LIBRARIES} ${DPDK_LIBRARIES} ${ARMADILLO_LIBRARIES} ${SOAPY_LIB}
     ${PYTHON_LIB} ${GFLAGS_LIBRARIES} ${COMMON_LIBS})
 message(VERBOSE "Common libs: ${COMMON_LIBS}")
 
