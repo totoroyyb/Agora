@@ -6,7 +6,7 @@ cmake_policy(SET CMP0048 NEW)
 project(Agora VERSION 1.2.0)
 
 # MIND version with NFS dynamic linking
-set(CMAKE_PREFIX_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/")
+set(CMAKE_PREFIX_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/;/shared_libraries_nfs/lib/;/shared_libraries_nfs/")
 
 if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
   #Flags is enabled by default for c++17
@@ -108,7 +108,7 @@ set(USE_SPDLOG True CACHE BOOL "USE_SPDLOG set to true to use the spdlog library
 message(STATUS "USE_SPDLOG:       ${USE_SPDLOG}")
 set(ENABLE_MAC False CACHE BOOL "ENABLE_MAC set to true to enable mac support")
 message(STATUS "ENABLE_MAC:       ${ENABLE_MAC}")
-set(ENABLE_CSV_LOG False CACHE BOOL "ENABLE_CSV_LOG set to enable csv log output")
+set(ENABLE_CSV_LOG True CACHE BOOL "ENABLE_CSV_LOG set to enable csv log output")
 message(STATUS "ENABLE_CSV_LOG:   ${ENABLE_CSV_LOG}")
 set(ENABLE_MAT_LOG False CACHE BOOL "ENABLE_MAT_LOG set to enable matrix log output")
 message(STATUS "ENABLE_MAT_LOG:   ${ENABLE_MAT_LOG}")
@@ -131,7 +131,7 @@ else()
 endif()
 
 #External Libraries / Depends
-find_library(NUMA_LIBRARIES numa REQUIRED)
+find_library(NUMA_LIBRARIES NAMES libnuma.a REQUIRED)
 message(VERBOSE "  Numa: Libraries ${NUMA_LIBRARIES}")
 
 # Intel MKL (threaded Intel10_64lp: Non-threaded Intel10_64lp_seq)
@@ -429,9 +429,11 @@ add_library(client_sources_lib OBJECT ${CLIENT_SOURCES})
 
 include_directories($ENV{MKLROOT}/include)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I$ENV{MKLROOT}/include")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+
 # set(COMMON_LIBS -Wl,--start-group ${MKL_LIBS} ${BLAS_LIBRARIES} -static-intel -Wl,--end-group ${NUMA_LIBRARIES} ${FLEXRAN_LDPC_LIBS} ${HDF5_LIBRARIES} ${DPDK_LIBRARIES} ${ARMADILLO_LIBRARIES} ${SOAPY_LIB}
 set(COMMON_LIBS -Wl,--start-group $ENV{MKLROOT}/lib/intel64/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/intel64/libmkl_sequential.a $ENV{MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl ${NUMA_LIBRARIES} ${FLEXRAN_LDPC_LIBS} ${HDF5_LIBRARIES} ${DPDK_LIBRARIES} ${ARMADILLO_LIBRARIES} ${SOAPY_LIB}
-    ${PYTHON_LIB} ${GFLAGS_LIBRARIES} ${COMMON_LIBS})
+    ${PYTHON_LIB} ${GFLAGS_LIBRARIES} ${COMMON_LIBS} )
 message(VERBOSE "Common libs: ${COMMON_LIBS}")
 
 # TODO: The main agora executable is performance-critical, so we need to
