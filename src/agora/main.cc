@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
   } else {
     conf_file = FLAGS_conf_file;
   }
-
+  std::printf("conf_file: %s\n", conf_file.c_str());
   std::unique_ptr<Config> cfg = std::make_unique<Config>(conf_file.c_str());
   cfg->GenData();
 

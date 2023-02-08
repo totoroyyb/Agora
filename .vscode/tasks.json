@@ -1,0 +1,43 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: build agora",
+			"command": "build",
+			"targets": [
+				"agora"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"detail": "Just build agora binary"
+		},
+		{
+			"type": "shell",
+			"label": "prep mind program",
+			"command": "cp ${workspaceFolder}/build/agora ${workspaceFolder}/build/test_mltthrd",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "Prepare a test_mltthrd which will use MIND."
+		},
+		{
+			"label": "Agora Debug Prelaunch",
+			"type": "shell",
+			"command": "echo Finished Prelaunch Prep",
+			"dependsOn": [
+				"CMake: build agora",
+				"prep mind program"
+			],
+			"group": {
+                "kind": "build",
+                "isDefault": false
+            },
+			"dependsOrder": "sequence"
+		}
+	]
+}
