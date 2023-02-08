@@ -1372,6 +1372,8 @@ void Config::GenData() {
     }
   }
 
+  std::printf("Generate time domain symbols for downlink\n");
+
   // Generate time domain uplink symbols
   for (size_t i = 0; i < this->frame_.NumULSyms(); i++) {
     for (size_t u = 0; u < this->ue_ant_num_; u++) {
@@ -1382,6 +1384,8 @@ void Config::GenData() {
                         this->scale_);
     }
   }
+
+  std::printf("Generate time domain uplink symbols\n");
 
   // Generate time domain ue-specific pilot symbols
   for (size_t i = 0; i < this->ue_ant_num_; i++) {
@@ -1397,6 +1401,8 @@ void Config::GenData() {
       std::printf("]\n");
     }
   }
+
+  std::printf("Generate time domain ue-specific pilot symbols\n");
 
   this->pilot_ci16_.resize(samps_per_symbol_, 0);
   CommsLib::Ifft2tx(pilot_ifft,
@@ -1437,15 +1443,18 @@ void Config::GenData() {
       std::cout << "];" << std::endl;
     }
   }
-
+  std::printf("Config generation almost done.\n");
   delete[](ul_temp_parity_buffer);
   delete[](dl_temp_parity_buffer);
+  std::printf("Deleted temp buffer\n");
   ul_iq_ifft.Free();
   dl_iq_ifft.Free();
   ue_pilot_ifft.Free();
   dl_encoded_bits.Free();
   ul_encoded_bits.Free();
+  std::printf("Freed bits\n");
   FreeBuffer1d(&pilot_ifft);
+  std::printf("Finalized config generation.\n");
 }
 
 Config::~Config() {

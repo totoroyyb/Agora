@@ -4,8 +4,9 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
-            "name": "(gdb) Launch",
+            "name": "(gdb) Launch Agora Locally",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/agora",
@@ -33,8 +34,36 @@
                 }
             ],
             "preLaunchTask": "Agora Debug Prelaunch"
+        },
+        {
+            "name": "(gdb) Launch Agora on MIND",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/test_mltthrd",
+            "args": [ "--conf_file", "./files/config/ci/tddconfig-sim-ul.json" ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                { 
+                    "name": "config", 
+                    "value": "Debug" 
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Agora Debug Prelaunch"
         }
-        
-
     ],
 }

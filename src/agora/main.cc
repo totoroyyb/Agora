@@ -33,12 +33,15 @@ int main(int argc, char* argv[]) {
   std::unique_ptr<Config> cfg = std::make_unique<Config>(conf_file.c_str());
   cfg->GenData();
 
+  std::printf("Started core assignment.\n");
   int ret;
   try {
     SignalHandler signal_handler;
 
     // Register signal handler to handle kill signal
+    std::printf("Started to register signal handler.\n");
     signal_handler.SetupSignalHandlers();
+    std::printf("Finished register signal handler.\n");
     std::unique_ptr<Agora> agora_cli = std::make_unique<Agora>(cfg.get());
     agora_cli->Start();
     ret = EXIT_SUCCESS;
@@ -46,7 +49,7 @@ int main(int argc, char* argv[]) {
     std::cerr << "SignalException: " << e.what() << std::endl;
     ret = EXIT_FAILURE;
   }
-
+  std::printf("Finished core assignment.\n");
   PrintCoreAssignmentSummary();
   gflags::ShutDownCommandLineFlags();
   AGORA_LOG_SHUTDOWN();
