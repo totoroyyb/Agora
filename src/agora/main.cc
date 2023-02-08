@@ -43,7 +43,9 @@ int main(int argc, char* argv[]) {
     signal_handler.SetupSignalHandlers();
     std::printf("Finished register signal handler.\n");
     std::unique_ptr<Agora> agora_cli = std::make_unique<Agora>(cfg.get());
+    std::printf("Finished init agora cli.\n");
     agora_cli->Start();
+    std::printf("Started agora cli.\n");
     ret = EXIT_SUCCESS;
   } catch (SignalException& e) {
     std::cerr << "SignalException: " << e.what() << std::endl;

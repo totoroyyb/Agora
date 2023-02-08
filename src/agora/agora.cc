@@ -52,11 +52,13 @@ Agora::Agora(Config* const cfg)
       stats_(std::make_unique<Stats>(cfg)),
       phy_stats_(std::make_unique<PhyStats>(cfg, Direction::kUplink)),
       agora_memory_(std::make_unique<AgoraBuffer>(cfg)) {
+  std::printf("Started Agora init.\n");
   AGORA_LOG_INFO("Agora: project directory [%s], RDTSC frequency = %.2f GHz\n",
                  kProjectDirectory.c_str(), cfg->FreqGhz());
-
+  std::printf("Started PinToCore init.\n");
   PinToCoreWithOffset(ThreadType::kMaster, cfg->CoreOffset(), 0,
                       kEnableCoreReuse, false /* quiet */);
+  std::printf("Started CheckIncrement init.\n");
   CheckIncrementScheduleFrame(0, ScheduleProcessingFlags::kProcessingComplete);
   // Important to set frame_tracking_.cur_sche_frame_id_ after the call to
   // CheckIncrementScheduleFrame because it will be incremented however,
@@ -64,12 +66,15 @@ Agora::Agora(Config* const cfg)
   // correctly.
   frame_tracking_.cur_sche_frame_id_ = 0;
   frame_tracking_.cur_proc_frame_id_ = 0;
-
+  std::printf("Started init queues.\n");
   InitializeQueues();
+  std::printf("Started init counters.\n");
   InitializeCounters();
+  std::printf("Started init threads.\n");
   InitializeThreads();
 
   if (kRecordUplinkFrame) {
+    std::printf("Started init recorder thread.\n");
     recorder_ = std::make_unique<Agora_recorder::RecorderThread>(
         config_, 0,
         cfg->CoreOffset() + config_->WorkerThreadNum() +
@@ -79,7 +84,10 @@ Agora::Agora(Config* const cfg)
         0, config_->BsAntNum(), kRecordFrameInterval, Direction::kUplink,
         kRecorderTypes, true);
     recorder_->Start();
+    std::printf("Finished init recorder thread.\n");
   }
+  
+  std::printf("Finished Agora init.\n");
 }
 
 Agora::~Agora() {
@@ -338,10 +346,12 @@ size_t Agora::FetchEvent(std::vector<EventData>& events_list,
 }
 
 void Agora::Start() {
+  std::printf("Started to start Agora service.\n");
   const auto& cfg = this->config_;
-
+  std::printf("Started to send TxRx.\n");
   const bool start_status = packet_tx_rx_->StartTxRx(
       agora_memory_->GetCalibDl(), agora_memory_->GetCalibUl());
+  std::printf("Finished to send TxRx.\n");
   // Start packet I/O
   if (start_status == false) {
     this->Stop();
@@ -844,6 +854,7 @@ finish:
     this->phy_stats_->PrintPhyStats();
   }
   this->Stop();
+  std::printf("Finished start Agora service.\n");
 }
 
 void Agora::HandleEventFft(size_t tag) {

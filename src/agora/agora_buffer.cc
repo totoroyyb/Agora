@@ -19,7 +19,9 @@ AgoraBuffer::AgoraBuffer(Config* const cfg)
       decoded_buffer_(kFrameWnd, cfg->Frame().NumULSyms(), cfg->UeAntNum(),
                       cfg->LdpcConfig(Direction::kUplink).NumBlocksInSymbol() *
                           Roundup<64>(cfg->NumBytesPerCb(Direction::kUplink))) {
+  std::printf("Started AgoraBuffer init.\n");
   AllocateTables();
+  std::printf("Finished AgoraBuffer init.\n");
 }
 
 AgoraBuffer::~AgoraBuffer() { FreeTables(); }

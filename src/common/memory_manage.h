@@ -35,18 +35,22 @@ class Table {
   Table() : data_(nullptr) {}
 
   void Malloc(size_t dim1, size_t dim2, Agora_memory::Alignment_t alignment) {
+    std::printf("Started Malloc.\n");
     this->dim2_ = dim2;
     this->dim1_ = dim1;
     // RtAssert(((dim1 > 0) && (dim2 == 0)), "Table: Malloc one dimension = 0");
     size_t alloc_size = (this->dim1_ * this->dim2_ * sizeof(T));
     this->data_ = static_cast<T*>(
         Agora_memory::PaddedAlignedAlloc(alignment, alloc_size));
+    std::printf("Finished Malloc.\n");
   }
   void Calloc(size_t dim1, size_t dim2, Agora_memory::Alignment_t alignment) {
     // RtAssert(((dim1 > 0) && (dim2 == 0)), "Table: Calloc one dimension = 0");
+    std::printf("Started Calloc.\n");
     this->Malloc(dim1, dim2, alignment);
     std::memset(static_cast<void*>(this->data_), 0,
                 (this->dim1_ * this->dim2_ * sizeof(T)));
+    std::printf("Finished Calloc.\n");
   }
 
   // Allocate the table and fill it with random floating point values between
