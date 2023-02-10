@@ -137,8 +137,10 @@ class PtrGrid {
   /// array of [n_entries]. This can use less memory than a fully-allocated
   /// grid.
   PtrGrid(size_t n_rows, size_t n_cols, size_t n_entries) {
+    std::printf("Started PtrGrid init.\n");
     assert(n_rows <= ROWS && n_cols <= COLS);
     this->Alloc(n_rows, n_cols, n_entries);
+    std::printf("Finished PtrGrid init.\n");
   }
 
   ~PtrGrid() {
@@ -150,10 +152,14 @@ class PtrGrid {
 
   /// Allocate [n_entries] entries per pointer cell
   void Alloc(size_t n_rows, size_t n_cols, size_t n_entries) {
+    std::printf("Started PtrGrid alloc.\n");
     const size_t alloc_sz = n_rows * n_cols * n_entries * sizeof(T);
+    std::printf("Started alloc backing buf.\n");
     this->backing_buf_ = static_cast<T*>(Agora_memory::PaddedAlignedAlloc(
         Agora_memory::Alignment_t::kAlign64, alloc_sz));
+    std::printf("Started memset backing buf.\n");
     std::memset(static_cast<void*>(this->backing_buf_), 0, alloc_sz);
+    std::printf("Finished memset backing buf.\n");
 
     // Fill-in the grid with pointers into backing_buf
     size_t offset = 0;
@@ -163,6 +169,7 @@ class PtrGrid {
         offset += n_entries;
       }
     }
+    std::printf("Finished PtrGrid alloc.\n");
   }
 
   /// Allocate [n_entries] entries per pointer cell.
@@ -219,7 +226,9 @@ class PtrCube {
   /// fully-allocated cube.
   PtrCube(size_t dim_1, size_t dim_2, size_t dim_3, size_t n_entries) {
     assert(dim_1 <= DIM1 && dim_2 <= DIM2 && dim_3 <= DIM3);
+    std::printf("Started PtrCub init.\n");
     this->Alloc(dim_1, dim_2, dim_3, n_entries);
+    std::printf("Finished PtrCub init.\n");
   }
 
   ~PtrCube() {
@@ -231,10 +240,14 @@ class PtrCube {
 
   /// Allocate [n_entries] entries per pointer cell
   void Alloc(size_t dim_1, size_t dim_2, size_t dim_3, size_t n_entries) {
+    std::printf("Started Alloc init.\n");
     const size_t alloc_sz = dim_1 * dim_2 * dim_3 * n_entries * sizeof(T);
+    std::printf("Started backing buf.\n");
     this->backing_buf_ = static_cast<T*>(Agora_memory::PaddedAlignedAlloc(
         Agora_memory::Alignment_t::kAlign64, alloc_sz));
+    std::printf("Started memset backing buf.\n");
     std::memset(static_cast<void*>(this->backing_buf_), 0, alloc_sz);
+    std::printf("Finished memset backing buf.\n");
 
     // Fill-in the grid with pointers into backing_buf
     for (auto& mat : this->cube_) {
@@ -254,6 +267,7 @@ class PtrCube {
         }
       }
     }
+    std::printf("Finished Alloc init.\n");
   }
 
   std::array<std::array<T*, DIM3>, DIM2>& operator[](size_t row_idx) {
