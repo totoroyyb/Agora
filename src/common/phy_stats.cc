@@ -25,7 +25,7 @@ PhyStats::PhyStats(Config* const cfg, Direction dir)
       logger_ul_csi_(CsvLog::kULCSI, cfg, dir),
       logger_dl_csi_(CsvLog::kDLCSI, cfg, dir),
       logger_dl_beam_(CsvLog::kDlBeam, cfg, dir) {
-  std::printf("Started PhyStats init.\n");
+  // std::printf("Started PhyStats init.\n");
   if (dir_ == Direction::kDownlink) {
     num_rx_symbols_ = cfg->Frame().NumDLSyms();
     num_rxdata_symbols_ = cfg->Frame().NumDlDataSyms();
@@ -93,7 +93,7 @@ PhyStats::PhyStats(Config* const cfg, Direction dir)
                           Agora_memory::Alignment_t::kAlign64);
   csi_cond_.Calloc(kFrameWnd, cfg->OfdmDataNum(),
                    Agora_memory::Alignment_t::kAlign64);
-  std::printf("Finished PhyStats init.\n");
+  // std::printf("Finished PhyStats init.\n");
 }
 
 PhyStats::~PhyStats() {

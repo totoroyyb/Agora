@@ -26,10 +26,10 @@ Stats::Stats(const Config* const cfg)
       decode_thread_num_(cfg->DecodeThreadNum()),
       freq_ghz_(cfg->FreqGhz()),
       creation_tsc_(GetTime::Rdtsc()) {
-  std::printf("Started stats init.\n");
+  // std::printf("Started stats init.\n");
   frame_start_.Calloc(config_->SocketThreadNum(), kNumStatsFrames,
                       Agora_memory::Alignment_t::kAlign64);
-  std::printf("Finished stats init.\n");
+  // std::printf("Finished stats init.\n");
 }
 
 Stats::~Stats() { frame_start_.Free(); }

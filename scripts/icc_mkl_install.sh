@@ -27,4 +27,6 @@ sudo sh ./$HPC_KIT_SCRIPT_NAME  -r yes -a -s --eula accept --action install --co
 echo "[SUCCESS] Installed ICC."
 
 SOURCE_VARS="source $INSTALL_PATH/oneapi/setvars.sh"
+
+echo $SOURCE_VARS >> ~/.bashrc
 echo $SOURCE_VARS >> ~/.zshrc

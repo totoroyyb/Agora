@@ -5,8 +5,20 @@ cmake_policy(SET CMP0054 NEW)
 cmake_policy(SET CMP0048 NEW)
 project(Agora VERSION 1.2.0)
 
+set(DEFAULT_FLEXRAN_SDK_PATH "/opt/FlexRAN-FEC-SDK-19-04/sdk")
+set(MIND_FLEXRAN_SDK_PATH "/shared_libraries_nfs/lib/FlexRAN-FEC-SDK-19-04/sdk")
+
 # MIND version with NFS dynamic linking
-set(CMAKE_PREFIX_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/;/shared_libraries_nfs/lib/;/shared_libraries_nfs/")
+option(BUILD_ON_MIND "Build Agora on MIND setup" ON)
+if (BUILD_ON_MIND)
+  message(STATUS "Setting building environment for MIND...")
+  set(MIND_LD_LIB_PATH "/shared_libraries_nfs/lib/x86_64-linux-gnu/;/shared_libraries_nfs/lib/;/shared_libraries_nfs/")
+endif()
+
+if (BUILD_ON_MIND)
+  message(STATUS "Set prefix path for locating shared libraries on MIND to ${MIND_LD_LIB_PATH}.")
+  set(CMAKE_PREFIX_PATH ${MIND_LD_LIB_PATH})
+endif()
 
 if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
   #Flags is enabled by default for c++17
@@ -74,8 +86,13 @@ message(STATUS "CURRENT DIRECTORY: ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
 add_definitions(-DPROJECT_DIRECTORY=${SOURCE_DIR})
 
-# Use NFS
-set(FLEXRAN_FEC_SDK_DIR /shared_libraries_nfs/lib/FlexRAN-FEC-SDK-19-04/sdk)
+if (BUILD_ON_MIND)
+  set(FLEXRAN_FEC_SDK_DIR ${MIND_FLEXRAN_SDK_PATH})
+else()
+  set(FLEXRAN_FEC_SDK_DIR ${DEFAULT_FLEXRAN_SDK_PATH})
+endif()
+
+message(STATUS "FLEXRAN_FEC_SDK_DIR: ${FLEXRAN_FEC_SDK_DIR}")
 
 # Determine if the current machine supports AVX-512
 CHECK_C_SOURCE_RUNS("int main() { asm volatile(\"vmovdqu64 %zmm0, %zmm1\"); return 0; }" ISA_AVX512)
@@ -108,7 +125,7 @@ set(USE_SPDLOG True CACHE BOOL "USE_SPDLOG set to true to use the spdlog library
 message(STATUS "USE_SPDLOG:       ${USE_SPDLOG}")
 set(ENABLE_MAC False CACHE BOOL "ENABLE_MAC set to true to enable mac support")
 message(STATUS "ENABLE_MAC:       ${ENABLE_MAC}")
-set(ENABLE_CSV_LOG True CACHE BOOL "ENABLE_CSV_LOG set to enable csv log output")
+set(ENABLE_CSV_LOG False CACHE BOOL "ENABLE_CSV_LOG set to enable csv log output")
 message(STATUS "ENABLE_CSV_LOG:   ${ENABLE_CSV_LOG}")
 set(ENABLE_MAT_LOG False CACHE BOOL "ENABLE_MAT_LOG set to enable matrix log output")
 message(STATUS "ENABLE_MAT_LOG:   ${ENABLE_MAT_LOG}")
@@ -431,7 +448,6 @@ include_directories($ENV{MKLROOT}/include)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I$ENV{MKLROOT}/include")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 
-# set(COMMON_LIBS -Wl,--start-group ${MKL_LIBS} ${BLAS_LIBRARIES} -static-intel -Wl,--end-group ${NUMA_LIBRARIES} ${FLEXRAN_LDPC_LIBS} ${HDF5_LIBRARIES} ${DPDK_LIBRARIES} ${ARMADILLO_LIBRARIES} ${SOAPY_LIB}
 set(COMMON_LIBS -Wl,--start-group $ENV{MKLROOT}/lib/intel64/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/intel64/libmkl_sequential.a $ENV{MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl ${NUMA_LIBRARIES} ${FLEXRAN_LDPC_LIBS} ${HDF5_LIBRARIES} ${DPDK_LIBRARIES} ${ARMADILLO_LIBRARIES} ${SOAPY_LIB}
     ${PYTHON_LIB} ${GFLAGS_LIBRARIES} ${COMMON_LIBS} )
 message(VERBOSE "Common libs: ${COMMON_LIBS}")

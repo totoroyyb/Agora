@@ -23,11 +23,11 @@ static inline double GetTime() { return GetTimeUs(); }
 
 /// Return the TSC
 static inline size_t Rdtsc() {
-  std::printf("Get Rdtsc.\n");
+  // std::printf("Get Rdtsc.\n");
   uint64_t rax;
   uint64_t rdx;
   asm volatile("rdtsc" : "=a"(rax), "=d"(rdx));
-  std::printf("Finished Rdtsc.\n");
+  // std::printf("Finished Rdtsc.\n");
   return static_cast<size_t>((rdx << 32) | rax);
 }
 
